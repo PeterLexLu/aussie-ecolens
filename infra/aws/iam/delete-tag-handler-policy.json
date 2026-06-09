@@ -1,0 +1,42 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "WriteMutationHandlerLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "DeleteOwnerScopedMediaObjects",
+      "Effect": "Allow",
+      "Action": [
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::aussie-ecolens-originals/users/*/*",
+        "arn:aws:s3:::aussie-ecolens-thumbnails/users/*/*",
+        "arn:aws:s3:::aussie-ecolens-query-temp/users/*/*"
+      ]
+    },
+    {
+      "Sid": "ReadAndMutateFileMetadata",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:Query",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Files",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Files/index/*",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/TagIndex"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,71 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "CloudWatchLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "S3ObjectAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject",
+        "s3:CopyObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::aussie-ecolens-originals/*",
+        "arn:aws:s3:::aussie-ecolens-thumbnails/*",
+        "arn:aws:s3:::aussie-ecolens-query-temp/*"
+      ]
+    },
+    {
+      "Sid": "S3BucketList",
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "arn:aws:s3:::aussie-ecolens-originals",
+        "arn:aws:s3:::aussie-ecolens-thumbnails",
+        "arn:aws:s3:::aussie-ecolens-query-temp"
+      ]
+    },
+    {
+      "Sid": "DynamoDBAccess",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:DeleteItem",
+        "dynamodb:Query",
+        "dynamodb:Scan"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Files",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Files/index/*",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/TagIndex",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Subscriptions",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Notifications"
+      ]
+    },
+    {
+      "Sid": "SNSPublish",
+      "Effect": "Allow",
+      "Action": [
+        "sns:Publish"
+      ],
+      "Resource": [
+        "arn:aws:sns:us-east-1:203276832845:aussie-ecolens-notifications"
+      ]
+    }
+  ]
+}
