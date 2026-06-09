@@ -1,0 +1,66 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Day 4 S3 to Lambda processing trigger permission outline"
+
+Parameters:
+  OriginalsBucketName:
+    Type: String
+    Default: aussie-ecolens-originals
+  ProcessingFunctionName:
+    Type: String
+    Default: aussie-ecolens-processing-handler
+
+Resources:
+  ProcessingLambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: AussieEcoLensProcessingLambdaRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+
+  ProcessingLambdaPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: AussieEcoLensProcessingLeastPrivilege
+      Roles:
+        - !Ref ProcessingLambdaExecutionRole
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: WriteProcessingLogs
+            Effect: Allow
+            Action:
+              - logs:CreateLogGroup
+              - logs:CreateLogStream
+              - logs:PutLogEvents
+            Resource: "*"
+          - Sid: ReadPendingOriginalsByOwnerPath
+            Effect: Allow
+            Action:
+              - s3:GetObject
+            Resource: !Sub "arn:aws:s3:::${OriginalsBucketName}/users/*/pending/*"
+          - Sid: WriteProcessedOwnerScopedObjects
+            Effect: Allow
+            Action:
+              - s3:PutObject
+              - s3:CopyObject
+              - s3:DeleteObject
+            Resource:
+              - !Sub "arn:aws:s3:::${OriginalsBucketName}/users/*/species/*"
+              - "arn:aws:s3:::aussie-ecolens-thumbnails/users/*/*"
+
+  AllowOriginalsBucketInvokeProcessingLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: lambda:InvokeFunction
+      FunctionName: !Ref ProcessingFunctionName
+      Principal: s3.amazonaws.com
+      SourceArn: !Sub "arn:aws:s3:::${OriginalsBucketName}"
+
+Outputs:
+  ProcessingLambdaExecutionRoleName:
+    Value: !Ref ProcessingLambdaExecutionRole

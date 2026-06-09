@@ -1,0 +1,63 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "WriteProcessingLogs",
+      "Effect": "Allow",
+      "Action": [
+        "logs:CreateLogGroup",
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+      ],
+      "Resource": "*"
+    },
+    {
+      "Sid": "ReadPendingOriginalsByOwnerPath",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::aussie-ecolens-originals/users/*/pending/*"
+      ]
+    },
+    {
+      "Sid": "WriteProcessedOriginalsAndThumbnails",
+      "Effect": "Allow",
+      "Action": [
+        "s3:PutObject",
+        "s3:CopyObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::aussie-ecolens-originals/users/*/species/*",
+        "arn:aws:s3:::aussie-ecolens-thumbnails/users/*/*"
+      ]
+    },
+    {
+      "Sid": "WriteFileMetadata",
+      "Effect": "Allow",
+      "Action": [
+        "dynamodb:GetItem",
+        "dynamodb:PutItem",
+        "dynamodb:UpdateItem",
+        "dynamodb:Query"
+      ],
+      "Resource": [
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Files",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/Files/index/*",
+        "arn:aws:dynamodb:us-east-1:203276832845:table/TagIndex"
+      ]
+    },
+    {
+      "Sid": "PublishTagNotifications",
+      "Effect": "Allow",
+      "Action": [
+        "sns:Publish"
+      ],
+      "Resource": [
+        "arn:aws:sns:us-east-1:203276832845:aussie-ecolens-notifications"
+      ]
+    }
+  ]
+}

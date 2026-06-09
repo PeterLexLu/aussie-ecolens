@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Aussie EcoLens starter infrastructure outline"
+Resources:
+  OriginalsBucket:
+    Type: AWS::S3::Bucket
+  ThumbnailsBucket:
+    Type: AWS::S3::Bucket
+  ModelsBucket:
+    Type: AWS::S3::Bucket
+  QueryTempBucket:
+    Type: AWS::S3::Bucket
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      AutoVerifiedAttributes:
+        - email
+      Schema:
+        - Name: email
+          Required: true
+          Mutable: true
+        - Name: given_name
+          Required: true
+          Mutable: true
+        - Name: family_name
+          Required: true
+          Mutable: true
+  FilesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: fileId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: fileId
+          KeyType: HASH
+  TagsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      BillingMode: PAY_PER_REQUEST
+      AttributeDefinitions:
+        - AttributeName: tag
+          AttributeType: S
+        - AttributeName: fileId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: tag
+          KeyType: HASH
+        - AttributeName: fileId
+          KeyType: RANGE
+  NotificationsTopic:
+    Type: AWS::SNS::Topic
+Outputs:
+  UserPoolId:
+    Value: !Ref UserPool
+  OriginalsBucketName:
+    Value: !Ref OriginalsBucket
+  CurrentConfiguredCognitoUserPoolId:
+    Description: Existing tested Cognito User Pool from auth-and-iam.md
+    Value: us-east-1_ahvGMB95O
+  CurrentConfiguredCognitoAppClientId:
+    Description: Existing tested Cognito App Client from auth-and-iam.md
+    Value: 2scr7btsqhli8d0hcchdltvnf5

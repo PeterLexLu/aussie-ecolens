@@ -1,0 +1,55 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "Aussie EcoLens Cognito resources for Day 2 auth integration"
+
+Resources:
+  AussieEcoLensUserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: AussieEcoLensUsers
+      AutoVerifiedAttributes:
+        - email
+      UsernameAttributes:
+        - email
+      Schema:
+        - Name: email
+          Required: true
+          Mutable: true
+        - Name: given_name
+          Required: true
+          Mutable: true
+        - Name: family_name
+          Required: true
+          Mutable: true
+      Policies:
+        PasswordPolicy:
+          MinimumLength: 8
+          RequireLowercase: true
+          RequireNumbers: true
+          RequireSymbols: false
+          RequireUppercase: true
+
+  AussieEcoLensUserPoolClient:
+    Type: AWS::Cognito::UserPoolClient
+    Properties:
+      ClientName: AussieEcoLensWeb
+      UserPoolId: !Ref AussieEcoLensUserPool
+      GenerateSecret: false
+      AllowedOAuthFlowsUserPoolClient: true
+      AllowedOAuthFlows:
+        - code
+      AllowedOAuthScopes:
+        - openid
+        - email
+        - profile
+      CallbackURLs:
+        - http://localhost:8000/
+      LogoutURLs:
+        - http://localhost:8000/
+      SupportedIdentityProviders:
+        - COGNITO
+
+Outputs:
+  UserPoolId:
+    Value: !Ref AussieEcoLensUserPool
+  UserPoolClientId:
+    Value: !Ref AussieEcoLensUserPoolClient

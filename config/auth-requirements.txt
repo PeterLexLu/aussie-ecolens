@@ -1,0 +1,3 @@
+# Required only when backend code verifies Cognito JWT RS256 signatures directly.
+# API Gateway Cognito/JWT authorizer can perform signature verification in cloud mode.
+cryptography>=42.0.0

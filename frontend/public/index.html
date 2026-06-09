@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Aussie EcoLens</title>
+    <link rel="stylesheet" href="../src/styles/styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#library" aria-label="Aussie EcoLens home">
+        <span class="brand-mark">AE</span>
+        <span>
+          <span class="brand-name">Aussie EcoLens</span>
+          <span class="brand-subtitle">Wildlife intelligence console</span>
+        </span>
+      </a>
+      <div class="session">
+        <span id="userBadge" class="user-badge hidden">Not signed in</span>
+        <button id="logoutButton" class="ghost hidden">Sign out</button>
+      </div>
+    </header>
+
+    <main>
+      <section id="authPanel" class="auth-shell">
+        <div class="auth-copy">
+          <p class="eyebrow">Secure cloud access</p>
+          <h1>Aussie EcoLens</h1>
+          <p>Sign in to manage wildlife media, review processing status, search detected species, and maintain notification rules.</p>
+        </div>
+        <div class="auth-grid auth-grid-single">
+          <div class="panel auth-card cognito-only-card">
+            <span class="auth-logo">AE</span>
+            <h2>Welcome to <span>Aussie EcoLens</span></h2>
+            <p>Sign in to access your wildlife intelligence console</p>
+            <button type="button" id="cognitoLoginButton" class="cognito">Sign in with Cognito</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="appPanel" class="hidden app-shell">
+        <aside class="side-nav" aria-label="Primary workspace navigation">
+          <a class="side-brand" href="#library" aria-label="Aussie EcoLens library">
+            <span class="side-brand-mark">AE</span>
+            <span>
+              <span class="side-brand-name">Aussie EcoLens</span>
+              <span class="side-brand-subtitle">Wildlife intelligence console</span>
+            </span>
+          </a>
+          <div class="side-section">
+            <p class="side-label">Media</p>
+            <a class="nav-link active" href="#library" data-section="library">
+              <span>Media Library</span>
+            </a>
+            <a class="nav-link" href="#upload" data-section="upload">
+              <span>Upload</span>
+            </a>
+          </div>
+          <div class="side-section">
+            <p class="side-label">Queries</p>
+            <a class="nav-link" href="#query-counts" data-section="query-counts">
+              <span>Query by Counts</span>
+            </a>
+            <a class="nav-link" href="#query-species" data-section="query-species">
+              <span>Query by Species</span>
+            </a>
+            <a class="nav-link" href="#query-file" data-section="query-file">
+              <span>Query by File</span>
+            </a>
+            <a class="nav-link" href="#query-thumbnail" data-section="query-thumbnail">
+              <span>Query by Thumbnail</span>
+            </a>
+          </div>
+          <div class="side-section">
+            <p class="side-label">Bulk operations</p>
+            <a class="nav-link" href="#bulk-tags" data-section="bulk-tags">
+              <span>Bulk Tags</span>
+            </a>
+          </div>
+          <div class="side-section">
+            <p class="side-label">Notifications</p>
+            <a class="nav-link" href="#notifications" data-section="notifications">
+              <span>Notifications</span>
+            </a>
+          </div>
+          <div class="side-status">
+            <span class="status-dot"></span>
+            <span>AWS API connected</span>
+          </div>
+        </aside>
+
+        <section class="workspace">
+          <header class="workspace-top">
+            <div id="message" class="message"></div>
+            <div class="workspace-user">
+              <button id="workspaceUserMenu" class="user-menu-button" type="button" aria-haspopup="true" aria-expanded="false">
+                <span id="workspaceUserEmail">Signed in with Cognito</span>
+                <span aria-hidden="true">v</span>
+              </button>
+              <div id="accountMenu" class="account-menu hidden" role="menu" aria-label="Account actions">
+                <button id="switchAccountButton" type="button" role="menuitem">Switch account</button>
+                <button id="accountLogoutButton" type="button" role="menuitem">Log out</button>
+              </div>
+            </div>
+          </header>
+
+          <section id="library" class="page-section active">
+            <div class="page-heading">
+              <div>
+                <h1>Media Library</h1>
+                <p>Manage your wildlife media files, or review shared results separately</p>
+              </div>
+              <div class="library-actions">
+                <button id="refreshButton" class="ghost refresh-action">Refresh</button>
+                <button id="resetResultsButton" class="ghost refresh-action hidden">Reset</button>
+              </div>
+            </div>
+            <div class="library-scope" aria-label="Media library scope">
+              <button type="button" class="scope-tab active" data-library-scope="mine">My media</button>
+              <button type="button" class="scope-tab" data-library-scope="shared">Shared media</button>
+              <button type="button" class="scope-tab" data-library-scope="results">Results</button>
+            </div>
+            <div class="metrics-grid" aria-label="Media summary">
+              <div class="metric">
+                <span>Total media</span>
+                <strong id="metricTotal">0</strong>
+              </div>
+              <div class="metric">
+                <span>Ready</span>
+                <strong id="metricReady">0</strong>
+              </div>
+              <div class="metric">
+                <span>In progress</span>
+                <strong id="metricPending">0</strong>
+              </div>
+              <div class="metric">
+                <span>Known tags</span>
+                <strong id="metricTags">0</strong>
+              </div>
+            </div>
+            <div id="detectedBox" class="detected hidden"></div>
+            <div id="gallery" class="gallery"></div>
+          </section>
+
+          <section id="upload" class="page-section">
+            <div class="page-heading">
+              <div>
+                <h1>Upload</h1>
+                <p>Upload a wildlife image or video for cloud processing</p>
+              </div>
+            </div>
+            <form id="uploadForm" class="page-form">
+              <label for="uploadFile">Media file</label>
+              <div class="file-picker">
+                <input id="uploadFile" class="native-file-input" name="file" type="file" accept="image/*,video/*" required />
+                <label class="file-picker-button" for="uploadFile">Choose file</label>
+                <span class="file-picker-name" data-file-name-for="uploadFile">No file selected</span>
+              </div>
+              <button>Upload</button>
+            </form>
+          </section>
+
+          <section id="query-counts" class="page-section">
+            <div class="page-heading">
+              <div>
+                <h1>Query by Counts</h1>
+                <p>Search media by tag counts using JSON format</p>
+              </div>
+            </div>
+            <form id="tagQueryForm" class="page-form">
+              <label for="tagQuery">Tag count JSON</label>
+              <textarea id="tagQuery" name="tags" rows="4">{"Alectura_lathami": 1}</textarea>
+              <button>Search</button>
+            </form>
+          </section>
+
+          <section id="query-species" class="page-section">
+            <div class="page-heading">
+              <div>
+                <h1>Query by Species</h1>
+                <p>Search media by species tag</p>
+              </div>
+            </div>
+            <form id="speciesQueryForm" class="page-form">
+              <label for="speciesQuery">Species tag</label>
+              <input id="speciesQuery" name="species" placeholder="e.g. Bos_taurus" />
+              <button>Search</button>
+            </form>
+          </section>
+
+          <section id="query-file" class="page-section">
+            <div class="page-heading">
+              <div>
+                <h1>Query by File</h1>
+                <p>Find matching tags in your file</p>
+              </div>
+            </div>
+            <form id="fileQueryForm" class="page-form">
+              <label for="queryFile">Query file</label>
+              <div class="file-picker">
+                <input id="queryFile" class="native-file-input" name="file" type="file" accept="image/*,video/*" required />
+                <label class="file-picker-button" for="queryFile">Choose file</label>
+                <span class="file-picker-name" data-file-name-for="queryFile">No file selected</span>
+              </div>
+              <button>Find matching tags</button>
+            </form>
+          </section>
+
+          <section id="query-thumbnail" class="page-section">
+            <div class="page-heading">
+              <div>
+                <h1>Query by Thumbnail</h1>
+                <p>Find original image by thumbnail URL</p>
+              </div>
+            </div>
+            <form id="thumbnailQueryForm" class="page-form">
+              <label for="thumbnailUrl">Thumbnail URL</label>
+              <input id="thumbnailUrl" name="thumbnailUrl" placeholder="/api/media/{fileId}/thumbnail" />
+              <button>Find original</button>
+            </form>
+          </section>
+
+          <section id="bulk-tags" class="page-section">
+            <div class="page-heading">
+              <div>
+                <h1>Bulk Tags</h1>
+                <p>Add or manage tags in bulk</p>
+              </div>
+            </div>
+            <form id="bulkTagForm" class="page-form">
+              <label for="bulkUrls">File URLs</label>
+              <textarea id="bulkUrls" name="urls" rows="3" placeholder="One protected original or thumbnail URL per line"></textarea>
+              <label for="bulkTags">Tags</label>
+              <input id="bulkTags" name="tags" placeholder="Comma-separated tags" />
+              <label for="bulkOperation">Operation</label>
+              <select id="bulkOperation" name="operation">
+                <option value="1">Add tags</option>
+                <option value="0">Remove tags</option>
+              </select>
+              <button>Apply</button>
+            </form>
+          </section>
+
+          <section id="notifications" class="page-section">
+            <div class="page-heading">
+              <div>
+                <h1>Notifications</h1>
+                <p>Subscribe to updates for a species tag</p>
+              </div>
+            </div>
+            <form id="subscribeForm" class="page-form">
+              <label for="subscribeTag">Species tag</label>
+              <input id="subscribeTag" name="tag" placeholder="Species tag" />
+              <label for="subscribeEmail">Email</label>
+              <input id="subscribeEmail" name="email" type="email" placeholder="Email" />
+              <button>Subscribe</button>
+            </form>
+            <div class="page-form notification-log-panel">
+              <h2>Notification log</h2>
+              <div id="notificationsLog"></div>
+            </div>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="../src/app.js?v=20260604-product-ui"></script>
+  </body>
+</html>

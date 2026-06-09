@@ -1,0 +1,12 @@
+.DS_Store
+.idea/
+__pycache__/
+*.pyc
+.env
+venv/
+node_modules/
+data/
+data/ecolens.sqlite3
+data/storage/originals/*
+data/storage/thumbnails/*
+data/storage/query_tmp/*
