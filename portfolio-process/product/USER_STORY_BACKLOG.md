@@ -42,4 +42,3 @@
 - 周五 Stand-up 根据测试证据将 Story 更新为 Done、Carry-over 或 Blocked。
 - 未完成 Story 不按百分比计为 Done，而是记录剩余工作和下一行动。
 - 客户 Demo 反馈先进入 Backlog，再判断属于缺陷、范围内改进或新需求。
-

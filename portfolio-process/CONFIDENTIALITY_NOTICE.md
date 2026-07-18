@@ -41,4 +41,3 @@ This project was delivered under a Non-Disclosure Agreement with the client. The
 To comply with the NDA, names, parameters, data, configurations, interface details, deployment information, and implementation details may have been anonymised, removed, replaced, or modified. The repository does not represent a complete copy of the client's production system. Its UI was created only for demonstrations and functional testing and is not the client's final user interface.
 
 All product, process, technical, and delivery information in this repository is current only up to **23 June 2026**. Subsequent after-sales support, code changes, configuration updates, requirement changes, bug fixes, and technical decisions are outside the scope of this repository and its portfolio documentation.
-
